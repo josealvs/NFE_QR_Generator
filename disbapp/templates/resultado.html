@@ -1,0 +1,3 @@
+<!-- templates/core/resultado.html -->
+<h3>QR Code de Pagamento</h3>
+${json.qrcode_base64 ? `<h3>QR Code Pix:</h3><img src="data:image/png;base64,${json.qrcode_base64}" alt="QR Code Pix">` : ''}

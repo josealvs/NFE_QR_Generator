@@ -1,0 +1,57 @@
+# Ambiente Python
+venv/
+ENV/
+env/
+.venv/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Configs de IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Django: arquivos gerados
+*.log
+*.pot
+*.py[cod]
+db.sqlite3
+media/
+staticfiles/
+static/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários
+*.bak
+*.tmp
+*.swp
+*.~ 
+*.orig
+
+# Arquivos de configuração locais
+.env
+*.secret
+*.key
+
+# Pytest
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# MyPy, Pylint, Bandit
+.mypy_cache/
+.pylint.d/
+__pypackages__/
+
+# VSCode settings específicos
+.vscode/settings.json
+.vscode/launch.json

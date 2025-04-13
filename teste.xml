@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:nfeProc xmlns:ns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+  <ns:NFe>
+    <ns:infNFe Id="NFe35250464144298000196550040000107611485147828" versao="4.00">
+      <ns:ide>
+        <ns:cUF>35</ns:cUF>
+        <ns:dhEmi>2025-04-10T12:30:00-03:00</ns:dhEmi>
+      </ns:ide>
+      <ns:emit>
+        <ns:CNPJ>12345678000199</ns:CNPJ>
+        <ns:xNome>Empresa Teste LTDA</ns:xNome>
+      </ns:emit>
+      <ns:dest>
+        <ns:CPF>00000000191</ns:CPF>
+        <ns:xNome>Cliente de Teste</ns:xNome>
+      </ns:dest>
+      <ns:det nItem="1">
+        <ns:prod>
+          <ns:cProd>001</ns:cProd>
+          <ns:xProd>Caneta Azul</ns:xProd>
+          <ns:qCom>2.0000</ns:qCom>
+          <ns:vUnCom>3.50</ns:vUnCom>
+          <ns:vProd>7.00</ns:vProd>
+        </ns:prod>
+      </ns:det>
+      <ns:det nItem="2">
+        <ns:prod>
+          <ns:cProd>002</ns:cProd>
+          <ns:xProd>Caderno 96 folhas</ns:xProd>
+          <ns:qCom>1.0000</ns:qCom>
+          <ns:vUnCom>15.00</ns:vUnCom>
+          <ns:vProd>15.00</ns:vProd>
+        </ns:prod>
+      </ns:det>
+      <ns:total>
+        <ns:ICMSTot>
+          <ns:vNF>22.00</ns:vNF>
+        </ns:ICMSTot>
+      </ns:total>
+    </ns:infNFe>
+  </ns:NFe>
+</ns:nfeProc>
