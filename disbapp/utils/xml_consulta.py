@@ -6,8 +6,8 @@ def ler_nfe_xml(path_arquivo):
 
     ns = {'ns': root.tag.split('}')[0].strip('{')}  # namespace dinâmico
 
-    emitente = root.find('.//ns:emit/ns:xNome', ns).text
-    cnpj = root.find('.//ns:emit/ns:CNPJ', ns).text
+    cliente = root.find('.//ns:dest/ns:xNome', ns).text
+    cpf = root.find('.//ns:dest/ns:CPF', ns).text
     data_emissao = root.find('.//ns:ide/ns:dhEmi', ns).text
     valor_total = root.find('.//ns:ICMSTot/ns:vNF', ns).text
     chave = root.attrib.get('Id', '')[-44:]
@@ -21,8 +21,8 @@ def ler_nfe_xml(path_arquivo):
 
     return {
         'chave': chave,
-        'emitente': emitente,
-        'cnpj_emitente': cnpj,
+        'cliente': cliente,
+        'cpf_cliente': cpf,
         'data_emissao': data_emissao,
         'valor_total': valor_total,
         'produtos': produtos

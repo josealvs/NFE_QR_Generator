@@ -1,5 +1,4 @@
 import qrcode
-from django.conf import settings
 
 def gerar_payload_pix(valor, chave_pix, nome_recebedor="JOSE ALVES DOS ANJOS PA", cidade="CAICO", txid="TX12345678"):
     def format_field(id_, value):
