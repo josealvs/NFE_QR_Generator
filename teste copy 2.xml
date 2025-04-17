@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns:nfeProc xmlns:ns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
   <ns:NFe>
-    <ns:infNFe Id="NFe35250464144298000196550040000107611485147828" versao="4.00">
+    <ns:infNFe Id="NFe35250464144298000196550040000123456789012345" versao="4.00">
       <ns:ide>
         <ns:cUF>35</ns:cUF>
-        <ns:dhEmi>2025-04-10T12:30:00-03:00</ns:dhEmi>
+        <ns:dhEmi>2025-04-15T10:00:00-03:00</ns:dhEmi>
       </ns:ide>
       <ns:emit>
-        <ns:CNPJ>12345678000199</ns:CNPJ>
-        <ns:xNome>Empresa Teste LTDA</ns:xNome>
+        <ns:CNPJ>98765432000188</ns:CNPJ>
+        <ns:xNome>Disbecol</ns:xNome> <!-- Nome do emitente -->
       </ns:emit>
       <ns:dest>
-        <ns:CPF>00000000191</ns:CPF>
-        <ns:xNome>Cliente de Teste</ns:xNome>
+        <ns:CPF>11122233344</ns:CPF>
+        <ns:xNome>Renan Jalves</ns:xNome>
+        <ns:xFant>Jalves Papelaria</ns:xFant> <!-- Nome fantasia -->
+        <ns:idEstrangeiro>CL123456</ns:idEstrangeiro> <!-- Código do cliente -->
+        <ns:enderEmit>
+          <ns:xLgr>Rua das Flores</ns:xLgr>
+          <ns:nro>123</ns:nro>
+          <ns:xBairro>Centro</ns:xBairro>
+          <ns:CEP>12345000</ns:CEP>
+          <ns:xMun>Cidade Exemplo</ns:xMun>
+          <ns:UF>SP</ns:UF>
+        </ns:enderEmit>
       </ns:dest>
       <ns:det nItem="1">
         <ns:prod>
           <ns:cProd>001</ns:cProd>
-          <ns:xProd>Caneta Azul</ns:xProd>
-          <ns:qCom>2.0000</ns:qCom>
-          <ns:vUnCom>3.50</ns:vUnCom>
-          <ns:vProd>7.00</ns:vProd>
-        </ns:prod>
-      </ns:det>
-      <ns:det nItem="2">
-        <ns:prod>
-          <ns:cProd>002</ns:cProd>
-          <ns:xProd>Caderno 96 folhas</ns:xProd>
+          <ns:xProd>Kit Escolar Completo</ns:xProd> <!-- Descrição -->
           <ns:qCom>1.0000</ns:qCom>
-          <ns:vUnCom>15.00</ns:vUnCom>
-          <ns:vProd>15.00</ns:vProd>
+          <ns:vUnCom>1.99</ns:vUnCom>
+          <ns:vProd>1.99</ns:vProd>
         </ns:prod>
       </ns:det>
       <ns:total>
         <ns:ICMSTot>
-          <ns:vNF>220</ns:vNF>
+          <ns:vNF>1.99</ns:vNF> <!-- Valor da nota fiscal -->
         </ns:ICMSTot>
       </ns:total>
     </ns:infNFe>

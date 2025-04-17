@@ -12,7 +12,7 @@
       </ns:emit>
       <ns:dest>
         <ns:CPF>11122233344</ns:CPF>
-        <ns:xNome>José Alves</ns:xNome>
+        <ns:xNome>Gabriel Jalves</ns:xNome>
         <ns:xFant>Jalves Papelaria</ns:xFant> <!-- Nome fantasia -->
         <ns:idEstrangeiro>CL123456</ns:idEstrangeiro> <!-- Código do cliente -->
         <ns:enderEmit>
@@ -29,13 +29,13 @@
           <ns:cProd>001</ns:cProd>
           <ns:xProd>Kit Escolar Completo</ns:xProd> <!-- Descrição -->
           <ns:qCom>1.0000</ns:qCom>
-          <ns:vUnCom>79.49</ns:vUnCom>
-          <ns:vProd>79.49</ns:vProd>
+          <ns:vUnCom>1000</ns:vUnCom>
+          <ns:vProd>1000</ns:vProd>
         </ns:prod>
       </ns:det>
       <ns:total>
         <ns:ICMSTot>
-          <ns:vNF>79.49</ns:vNF> <!-- Valor da nota fiscal -->
+          <ns:vNF>1000</ns:vNF> <!-- Valor da nota fiscal -->
         </ns:ICMSTot>
       </ns:total>
     </ns:infNFe>
