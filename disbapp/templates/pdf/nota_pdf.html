@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .info {
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+    .qrcode {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .payload {
+      background: #f4f4f4;
+      margin-top: 10px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      max-width: 600px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>QRCode de Pagamento</h1>
+
+  <div class="info">
+    <p><strong>Código do Cliente:</strong> {{ txid }}</p>
+    <p><strong>Cliente:</strong> {{ cliente }}</p>
+    <p><strong>Valor Total:</strong> R$ {{ valor }}</p>
+  </div>
+
+  <div class="qrcode">
+    <img src="data:image/png;base64,{{ qrcode_base64 }}" width="80" height="80">
+  </div>
+
+  <h3>Pix Copia e Cola</h3>
+  <div class="payload">{{ payload }}</div>
+</body>
+</html>

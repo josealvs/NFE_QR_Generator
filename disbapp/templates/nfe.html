@@ -19,6 +19,22 @@
       return cookieValue;
     }
 
+    function baixarPDF(txid, pdfBase64) {
+      const link = document.createElement("a");
+      link.href = `data:application/pdf;base64,${pdfBase64}`;
+      link.download = `nota_${txid}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function imprimirPDF(pdfBase64) {
+      const pdfWindow = window.open("");
+      pdfWindow.document.write(
+        `<iframe width='100%' height='100%' style='border:none' src='data:application/pdf;base64,${pdfBase64}'></iframe>`
+      );
+    }
+
     const csrftoken = getCookie('csrftoken');
 
     async function enviarXML(event) {
@@ -32,7 +48,6 @@
         return;
       }
 
-      // Adiciona todos os arquivos XML no FormData
       for (let i = 0; i < files.length; i++) {
         formData.append("xml", files[i]);
       }
@@ -55,39 +70,67 @@
       }
 
       const json = await response.json();
-      resultado.innerHTML = ""; // limpa antes de renderizar os novos
+      resultado.innerHTML = "";
 
       json.forEach((nota, index) => {
         const bloco = document.createElement('div');
-        bloco.style.marginBottom = "2rem";
-        bloco.style.padding = "1rem";
-        bloco.style.border = "1px solid #ccc";
-        bloco.style.backgroundColor = "#fff";
+        bloco.className = "mb-6 p-4 border rounded bg-white shadow";
 
         bloco.innerHTML = `
-          <h3>Nota Fiscal ${index + 1}</h3>
-          <pre>${JSON.stringify(nota, null, 2)}</pre>
-          <h4>QR Code Pix:</h4>
-          <img src="data:image/png;base64,${nota.qrcode_base64}" alt="QR Code Pix" style="width: 200px; height: 200px;">
-          <h4>Payload Pix (Pix Copia e Cola):</h4>
-          <textarea readonly style="width:100%; height: 100px;">${nota.payload}</textarea>
+          <h3 class="text-lg font-semibold mb-2">Nota Fiscal ${index + 1}</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
+            <p><strong>Cliente:</strong> ${nota.cliente || 'N/A'}</p>
+            <p><strong>CPF:</strong> ${nota.cpf_cliente || 'N/A'}</p>
+            <p><strong>Data:</strong> ${nota.data_emissao || 'N/A'}</p>
+            <p><strong>Valor Total:</strong> R$ ${nota.valor_total || '0,00'}</p>
+            <p><strong>TXID:</strong> ${nota.txid}</p>
+          </div>
+          <h4 class="mt-4 font-semibold">QR Code Pix:</h4>
+          <img src="data:image/png;base64,${nota.qrcode_base64}" alt="QR Code Pix" class="w-48 h-48 my-2">
+          <h4 class="font-semibold">Payload Pix (Pix Copia e Cola):</h4>
+          <textarea readonly class="w-full h-24 p-2 border bg-gray-100 resize-none">${nota.payload}</textarea>
+
+          <div class="mt-4 flex justify-end gap-4 mr-3 mb-2">
+            <button onclick="baixarPDF('${nota.txid}', '${nota.pdf_base64}')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+              📄 Baixar PDF
+            </button>
+            <button onclick="imprimirPDF('${nota.pdf_base64}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              🖨️ Imprimir
+            </button>
+          </div>
         `;
+
         resultado.appendChild(bloco);
       });
     }
   </script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body style="font-family: sans-serif; padding: 2rem; background-color: #f8f8f8;">
-  <h1>Upload de Notas Fiscais (XML)</h1>
-  <form method="post" onsubmit="enviarXML(event)" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="xml">Selecione um ou mais arquivos XML:</label><br><br>
-    <input type="file" id="xml" name="xml" accept=".xml" multiple required><br><br>
-    <button type="submit">Enviar</button>
-  </form>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <!-- Topbar -->
+  {% load static %}
+  <header class="bg-blue-800 py-4 shadow-md">
+    <div class="container mx-auto flex items-center ml-16">
+      <img src="{% static 'image.png' %}" alt="Logo Disbecol" class="h-10">
+    </div>
+  </header>
 
-  <hr>
-  <h2>Resultados:</h2>
-  <div id="resultado" style="background-color: #eaeaea; padding: 1rem;"></div>
+  <!-- Conteúdo principal -->
+  <main class="flex-grow flex items-start justify-center py-14">
+    <div class="bg-white pt-8 px-8 rounded-lg shadow-md w-full max-w-2xl">
+      <form method="post" onsubmit="enviarXML(event)" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="xml" class="block text-lg font-medium mb-2">Selecione um ou mais arquivos XML:</label>
+        <input type="file" id="xml" name="xml" accept=".xml" multiple required class="mb-4 w-full p-2 border rounded">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">Enviar</button>
+      </form>
+
+      <div id="resultado" class="mt-10"></div>
+    </div>
+  </main>
+
+  <footer class="bottom-0 h-8 flex justify-center items-center w-full">
+    <p class="">© 2025 Disbecol</p>
+  </footer>
 </body>
 </html>
