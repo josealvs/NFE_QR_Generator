@@ -20,8 +20,6 @@ __pycache__/
 *.py[cod]
 db.sqlite3
 media/
-staticfiles/
-static/
 
 # Arquivos de sistema
 .DS_Store
