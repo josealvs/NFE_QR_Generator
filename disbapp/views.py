@@ -12,6 +12,13 @@ from .utils.xml_consulta import ler_nfe_xml
 from .utils.qr_generator import gerar_payload_pix
 
 
+def formatar_valor(valor):
+    try:
+        valor_float = float(valor.replace(",", "."))
+        return f"{valor_float:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    except:
+        return "0,00"
+
 def upload_xml_nfe_view(request):
     if request.method == "POST" and request.FILES.getlist("xml"):
         arquivos_xml = request.FILES.getlist("xml")
@@ -27,16 +34,18 @@ def upload_xml_nfe_view(request):
                     f.write(chunk)
 
             dados = ler_nfe_xml(caminho_temp)
-            valor = dados.get("valor_total", "0").replace(",", ".")
-            txid = dados.get("chave") or "TX12345678"
-            txid = txid.strip()[:35] or "TX12345678"
+            valor = dados.get("valor_liquido", "0")
+            valor_float = float(valor.replace(",", "."))
+            valor_formatado = formatar_valor(valor)
+            txid_original = dados.get("txid", "00000000").zfill(8)
+            txid = f"TX{txid_original}"
+
 
             # Gerar payload e QR Code
             payload = gerar_payload_pix(
-                valor,
+                valor_float,
                 chave_pix=settings.PIX_CHAVE,
                 nome_recebedor=settings.PIX_NOME_RECEBEDOR,
-                cidade=settings.PIX_CIDADE,
                 txid=txid
             )
 
@@ -49,8 +58,9 @@ def upload_xml_nfe_view(request):
             # Geração do PDF (com template HTML)
             html_string = render_to_string("pdf/nota_pdf.html", {
                 "txid": txid,
-                "valor": valor,
-                "cliente": dados.get("cliente", ""),
+                "valor": valor_formatado,
+                "cliente": dados.get("cliente", "N/A"),
+                "cod_cliente": dados.get("cod_cliente", "N/A"),
                 "payload": payload,
                 "qrcode_base64": qrcode_base64
             })
@@ -61,6 +71,7 @@ def upload_xml_nfe_view(request):
 
             # Montar resposta
             dados["txid"] = txid
+            dados["valor_liquido"] = valor_formatado
             dados["qrcode_base64"] = qrcode_base64
             dados["payload"] = payload
             dados["pdf_base64"] = pdf_base64
