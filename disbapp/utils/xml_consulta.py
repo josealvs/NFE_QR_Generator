@@ -1,29 +1,41 @@
+import re
 import xml.etree.ElementTree as ET
 
 def ler_nfe_xml(path_arquivo):
     tree = ET.parse(path_arquivo)
     root = tree.getroot()
-
     ns = {'ns': root.tag.split('}')[0].strip('{')}  # namespace dinâmico
 
-    cliente = root.find('.//ns:dest/ns:xNome', ns).text
-    cpf = root.find('.//ns:dest/ns:CPF', ns).text
-    data_emissao = root.find('.//ns:ide/ns:dhEmi', ns).text
-    valor_total = root.find('.//ns:ICMSTot/ns:vNF', ns).text
-    chave = root.attrib.get('Id', '')[-44:]
+    def get_text(path):
+        el = root.find(path, ns)
+        return el.text.strip() if el is not None and el.text else ""
 
-    produtos = []
-    for det in root.findall('.//ns:det', ns):
-        nome = det.find('.//ns:prod/ns:xProd', ns).text
-        qtd = det.find('.//ns:prod/ns:qCom', ns).text
-        valor = det.find('.//ns:prod/ns:vProd', ns).text
-        produtos.append({'nome': nome, 'quantidade': qtd, 'valor_total': valor})
+    cliente = get_text('.//ns:dest/ns:xNome')
+    cpf_cliente = get_text('.//ns:dest/ns:CPF')
+    cnpj_cliente = get_text('.//ns:dest/ns:CNPJ')
+    data_emissao = get_text('.//ns:ide/ns:dhEmi')
+    valor_liquido = get_text('.//ns:fat/ns:vLiq')
+
+    # usa CPF ou CNPJ
+    ident_cliente = cpf_cliente if cpf_cliente else cnpj_cliente
+
+    # agora o TXID será o número da nota fiscal (nNF)
+    txid = get_text('.//ns:ide/ns:nNF')
+
+    # pega o conteúdo completo da tag <infCpl> para extrair código do cliente
+    inf_cpl = get_text('.//ns:infAdic/ns:infCpl')
+    cod_cliente = ""
+
+    if inf_cpl:
+        match = re.search(r'V[^V]*V(\d+)\|', inf_cpl)
+        if match:
+            cod_cliente = match.group(1)
 
     return {
-        'chave': chave,
+        'txid': txid,
         'cliente': cliente,
-        'cpf_cliente': cpf,
+        'ident_cliente': ident_cliente,
         'data_emissao': data_emissao,
-        'valor_total': valor_total,
-        'produtos': produtos
+        'valor_liquido': valor_liquido,
+        'cod_cliente': cod_cliente,
     }
