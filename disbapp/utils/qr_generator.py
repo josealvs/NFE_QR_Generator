@@ -1,6 +1,6 @@
 import qrcode
 
-def gerar_payload_pix(valor, chave_pix, nome_recebedor="JOSE ALVES DOS ANJOS PA", cidade="CAICO", txid="TX12345678"):
+def gerar_payload_pix(valor, chave_pix, nome_recebedor="", txid="TX12345678"):
     def format_field(id_, value):
         return f"{id_}{len(value):02d}{value}"
 
@@ -18,7 +18,6 @@ def gerar_payload_pix(valor, chave_pix, nome_recebedor="JOSE ALVES DOS ANJOS PA"
         format_field("54", valor_str) +
         format_field("58", "BR") +
         format_field("59", nome_recebedor.upper()[:25]) +  # Sem acentos e máx 25
-        format_field("60", cidade.upper()[:15]) +           # Sem acentos e máx 15
         format_field("62", format_field("05", txid[:35]))   # Campo adicional com TXID
     )
 
@@ -51,7 +50,6 @@ def gerar_qrcode_pix(valor, txid="TX12345678", output_path="qrcode_pix.png"):
         valor,
         chave_pix=settings.PIX_CHAVE,
         nome_recebedor=settings.PIX_NOME_RECEBEDOR,
-        cidade=settings.PIX_CIDADE,
         txid=txid
     )
     img = qrcode.make(payload)
