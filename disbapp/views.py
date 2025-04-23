@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.conf import settings
 from weasyprint import HTML
+from PyPDF2 import PdfMerger
 
 from .utils.xml_consulta import ler_nfe_xml
 from .utils.qr_generator import gerar_payload_pix
@@ -24,6 +25,8 @@ def upload_xml_nfe_view(request):
         arquivos_xml = request.FILES.getlist("xml")
         base_dir = os.path.dirname(__file__)
         response_data = []
+
+        merger = PdfMerger()
 
         for xml_file in arquivos_xml:
             caminho_temp = os.path.join(base_dir, "temp_nfe.xml")
@@ -69,7 +72,9 @@ def upload_xml_nfe_view(request):
             HTML(string=html_string).write_pdf(pdf_buffer)
             pdf_base64 = base64.b64encode(pdf_buffer.getvalue()).decode("utf-8")
 
-            # Montar resposta
+            pdf_buffer.seek(0)
+            merger.append(pdf_buffer)
+
             dados["txid"] = txid
             dados["valor_liquido"] = valor_formatado
             dados["qrcode_base64"] = qrcode_base64
@@ -80,7 +85,15 @@ def upload_xml_nfe_view(request):
 
             os.remove(caminho_temp)
 
-        return JsonResponse(response_data, safe=False)
+        final_pdf = BytesIO()
+        merger.write(final_pdf)
+        merger.close()
+        final_pdf_base64 = base64.b64encode(final_pdf.getvalue()).decode("utf-8")
+
+        return JsonResponse({
+            "notas": response_data,
+            "pdf_unico_base64": final_pdf_base64
+        })
 
     return JsonResponse({"erro": "Envie arquivos XML via POST."}, status=400)
 

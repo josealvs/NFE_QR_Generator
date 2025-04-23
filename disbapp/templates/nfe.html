@@ -49,6 +49,25 @@
       return doc;
     }
 
+    let pdfsGlobais = [];
+    let pdfUnicoBase64 = "";
+
+    function baixarTodosPDFs() {
+      const link = document.createElement("a");
+      link.href = `data:application/pdf;base64,${pdfUnicoBase64}`;
+      link.download = `todas_notas.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function imprimirTodosPDFs() {
+      const w = window.open("");
+      w.document.write(
+        `<iframe width='100%' height='100%' style='border:none' src='data:application/pdf;base64,${pdfUnicoBase64}'></iframe>`
+      );
+    }
+
     const csrftoken = getCookie('csrftoken');
 
     async function enviarXML(event) {
@@ -84,9 +103,11 @@
       }
 
       const json = await response.json();
+      const notas = json.notas;
+      pdfUnicoBase64 = json.pdf_unico_base64;
       resultado.innerHTML = "";
 
-      json.forEach((nota, index) => {
+      notas.forEach((nota, index) => {
         const bloco = document.createElement('div');
         bloco.className = "mb-6 p-4 border rounded bg-white shadow";
 
@@ -116,7 +137,12 @@
         `;
 
         resultado.appendChild(bloco);
+
+        pdfsGlobais.push(nota.pdf_base64);
       });
+
+      document.getElementById("btnBaixarTodos").classList.remove("hidden");
+      document.getElementById("btnImprimirTodos").classList.remove("hidden");
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -137,7 +163,15 @@
         {% csrf_token %}
         <label for="xml" class="block text-lg font-medium mb-2">Selecione um ou mais arquivos XML:</label>
         <input type="file" id="xml" name="xml" accept=".xml" multiple required class="mb-4 w-full p-2 border rounded">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">Enviar</button>
+        <div class="flex gap-4 items-center">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">Enviar</button>
+          <button type="button" id="btnBaixarTodos" onclick="baixarTodosPDFs()" class="hidden bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">
+            📄 Baixar Todos
+          </button>
+          <button type="button" id="btnImprimirTodos" onclick="imprimirTodosPDFs()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded">
+            🖨️ Imprimir Todos
+          </button>
+        </div>
       </form>
 
       <div id="resultado" class="mt-10"></div>
