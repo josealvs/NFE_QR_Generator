@@ -73,6 +73,10 @@
     async function enviarXML(event) {
       event.preventDefault();
       const formData = new FormData();
+
+      const cidade = document.querySelector('select[name="cidade"]').value;
+      formData.append("cidade", cidade);  // <- 🚨 ESSA LINHA É O QUE FALTAVA
+
       const fileInput = document.getElementById('xml');
       const files = fileInput.files;
 
@@ -93,6 +97,7 @@
         },
         credentials: "same-origin"
       });
+
 
       const resultado = document.getElementById("resultado");
 
@@ -167,6 +172,11 @@
     <div class="bg-white pt-8 px-8 rounded-lg shadow-md w-full max-w-2xl">
       <form method="post" onsubmit="enviarXML(event)" enctype="multipart/form-data">
         {% csrf_token %}
+        <label for="cidade" class="block text-lg font-medium mb-2">Selecionar Cidade:</label>
+        <select name="cidade" required class="mb-4 w-full p-2 border rounded">
+          <option value="CAICO">Caicó</option>
+          <option value="PAU_DOS_FERROS">Pau dos Ferros</option>
+        </select>
         <label for="xml" class="block text-lg font-medium mb-2">Selecione um ou mais arquivos XML:</label>
         <input type="file" id="xml" name="xml" accept=".xml" multiple required class="mb-4 w-full p-2 border rounded">
         <div class="flex gap-4 items-center">

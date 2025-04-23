@@ -1,6 +1,6 @@
+import re
 import qrcode
 import unicodedata
-import re
 from django.conf import settings
 
 def limpar_texto_pix(texto, max_len):
@@ -10,10 +10,9 @@ def limpar_texto_pix(texto, max_len):
     return texto.strip()[:max_len]
 
 def gerar_txid_seguro(numero_nota: str):
-    """Gera um TXID seguro e compatível com o padrão EMVCo a partir do número da nota."""
-    numero = re.sub(r'\D', '', numero_nota)  # remove caracteres não numéricos
-    numero = numero.zfill(8)  # força ao menos 8 dígitos
-    return f"TX{numero}"[:35]  # prefixo + truncamento (máx 35 chars)
+    numero = re.sub(r'\D', '', numero_nota)
+    numero = numero.zfill(8)
+    return f"TX{numero}"[:35]
 
 def format_field(id_, value):
     return f"{id_}{len(value):02d}{value}"
@@ -58,13 +57,13 @@ def crc16(data: bytes):
             crc &= 0xFFFF
     return crc
 
-def gerar_qrcode_pix(valor, numero_nota, output_path="qrcode_pix.png"):
+def gerar_qrcode_pix(valor, numero_nota, output_path="qrcode_pix.png", chave_pix="", nome_recebedor="", cidade=""):
     txid = gerar_txid_seguro(numero_nota)
     payload = gerar_payload_pix(
         valor=valor,
-        chave_pix=settings.PIX_CHAVE,
-        nome_recebedor=settings.PIX_NOME_RECEBEDOR,
-        cidade=settings.PIX_CIDADE,
+        chave_pix=chave_pix,
+        nome_recebedor=nome_recebedor,
+        cidade=cidade,
         txid=txid
     )
     img = qrcode.make(payload)
