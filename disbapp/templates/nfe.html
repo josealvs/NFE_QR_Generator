@@ -55,7 +55,7 @@
     function baixarTodosPDFs() {
       const link = document.createElement("a");
       link.href = `data:application/pdf;base64,${pdfUnicoBase64}`;
-      link.download = `todas_notas.pdf`;
+      link.download = `QRCodes_das_notas.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -75,7 +75,7 @@
       const formData = new FormData();
 
       const cidade = document.querySelector('select[name="cidade"]').value;
-      formData.append("cidade", cidade);  // <- 🚨 ESSA LINHA É O QUE FALTAVA
+      formData.append("cidade", cidade);
 
       const fileInput = document.getElementById('xml');
       const files = fileInput.files;
