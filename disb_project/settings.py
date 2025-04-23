@@ -135,7 +135,7 @@ PIX_CONFIGS = {
         "cidade": "CAICO"
     },
     "PAU_DOS_FERROS": {
-        "chave": "j.alvesjs2020@gmail.com",
+        "chave": "+5584996099264",
         "nome": "DISBECOL DIST BEB LTDA",
         "cidade": "PAU DOS FERROS"
     }
