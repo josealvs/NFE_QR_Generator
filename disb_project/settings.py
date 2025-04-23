@@ -129,6 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuração da chave Pix
 PIX_CHAVE = "08562308000132"
 PIX_NOME_RECEBEDOR = "DISBECOL DIST BEB LTDA"
+PIX_CIDADE = "CAICO"
 
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
