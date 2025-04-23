@@ -1,6 +1,5 @@
 import os
 import base64
-import qrcode
 from io import BytesIO
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -10,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from weasyprint import HTML
 from PyPDF2 import PdfMerger
 from .utils.xml_consulta import ler_nfe_xml
-from .utils.qr_generator import gerar_qrcode_pix, gerar_txid_seguro
+from .utils.qr_generator import gerar_qrcode_pix
 
 def formatar_valor(valor):
     try:
