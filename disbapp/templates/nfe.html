@@ -151,8 +151,14 @@
   <!-- Topbar -->
   {% load static %}
   <header class="bg-blue-800 py-4 shadow-md">
-    <div class="container mx-auto flex items-center ml-16">
-      <img src="{% static 'image.png' %}" alt="Logo Disbecol" class="h-10">
+    <div class="container mx-auto flex justify-between items-center ml-16">
+      <div class="flex items-center gap-4 px-4">
+        <img src="{% static 'image.png' %}" alt="Logo Disbecol" class="h-10">
+      </div>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow-sm transition duration-200">Sair</button>
+      </form>
     </div>
   </header>
 

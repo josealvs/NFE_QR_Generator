@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from weasyprint import HTML
 from PyPDF2 import PdfMerger
 
@@ -20,6 +21,7 @@ def formatar_valor(valor):
     except:
         return "0,00"
 
+@login_required
 def upload_xml_nfe_view(request):
     if request.method == "POST" and request.FILES.getlist("xml"):
         arquivos_xml = request.FILES.getlist("xml")
@@ -97,5 +99,6 @@ def upload_xml_nfe_view(request):
 
     return JsonResponse({"erro": "Envie arquivos XML via POST."}, status=400)
 
+@login_required
 def pagina_upload_view(request):
     return render(request, "nfe.html")
