@@ -57,7 +57,7 @@
     function baixarTodosPDFs() {
       const link = document.createElement("a");
       link.href = `data:application/pdf;base64,${pdfUnicoBase64}`;
-      link.download = `todas_notas.pdf`;
+      link.download = `QRCodes_das_notas.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

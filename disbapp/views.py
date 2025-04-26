@@ -15,7 +15,6 @@ from PyPDF2 import PdfMerger
 from .utils.xml_consulta import ler_nfe_xml
 from .utils.qr_generator import gerar_qrcode_pix
 
-
 def formatar_valor(valor):
     try:
         valor_float = float(valor.replace(",", "."))

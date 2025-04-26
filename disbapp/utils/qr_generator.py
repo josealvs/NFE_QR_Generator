@@ -1,7 +1,6 @@
 import re
 import qrcode
 import unicodedata
-from django.conf import settings
 
 def limpar_texto_pix(texto, max_len):
     texto = unicodedata.normalize("NFD", texto)
