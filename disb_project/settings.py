@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Recife'  # ou 'America/Fortaleza', ou 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -135,12 +135,11 @@ PIX_CONFIGS = {
         "cidade": "CAICO"
     },
     "PAU_DOS_FERROS": {
-        "chave": "j.alvesjs2020@gmail.com",
+        "chave": "+5584996099264",
         "nome": "DISBECOL DIST BEB LTDA",
         "cidade": "PAU DOS FERROS"
     }
 }
-
 
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
@@ -150,3 +149,5 @@ CSRF_TRUSTED_ORIGINS = [
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/nfe/"
 LOGOUT_REDIRECT_URL = "/login/"
+
+

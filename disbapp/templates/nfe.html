@@ -51,6 +51,8 @@
 
     let pdfsGlobais = [];
     let pdfUnicoBase64 = "";
+    let csvBase64 = "";
+    let csvFilename = "";
 
     function baixarTodosPDFs() {
       const link = document.createElement("a");
@@ -68,6 +70,20 @@
       );
     }
 
+    function baixarCSV() {
+      if (!csvBase64) {
+        alert("Nenhum CSV disponível ainda.");
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.href = "data:text/csv;base64," + csvBase64;
+      link.download = csvFilename || "relatorio_conciliacao.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     const csrftoken = getCookie('csrftoken');
 
     async function enviarXML(event) {
@@ -75,7 +91,7 @@
       const formData = new FormData();
 
       const cidade = document.querySelector('select[name="cidade"]').value;
-      formData.append("cidade", cidade);  // <- 🚨 ESSA LINHA É O QUE FALTAVA
+      formData.append("cidade", cidade);
 
       const fileInput = document.getElementById('xml');
       const files = fileInput.files;
@@ -98,7 +114,6 @@
         credentials: "same-origin"
       });
 
-
       const resultado = document.getElementById("resultado");
 
       if (!response.ok) {
@@ -110,6 +125,9 @@
       const json = await response.json();
       const notas = json.notas;
       pdfUnicoBase64 = json.pdf_unico_base64;
+      csvBase64 = json.csv_base64;
+      csvFilename = json.csv_filename;
+
       resultado.innerHTML = "";
 
       notas.forEach((nota, index) => {
@@ -142,18 +160,17 @@
         `;
 
         resultado.appendChild(bloco);
-
         pdfsGlobais.push(nota.pdf_base64);
       });
 
       document.getElementById("btnBaixarTodos").classList.remove("hidden");
       document.getElementById("btnImprimirTodos").classList.remove("hidden");
+      document.getElementById("btnBaixarCSV").classList.remove("hidden");
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-  <!-- Topbar -->
   {% load static %}
   <header class="bg-blue-800 py-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center ml-16">
@@ -167,9 +184,8 @@
     </div>
   </header>
 
-  <!-- Conteúdo principal -->
   <main class="flex-grow flex items-start justify-center py-14">
-    <div class="bg-white pt-8 px-8 rounded-lg shadow-md w-full max-w-2xl">
+    <div class="bg-white pt-8 px-8 rounded-lg shadow-md w-full max-w-3xl">
       <form method="post" onsubmit="enviarXML(event)" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="cidade" class="block text-lg font-medium mb-2">Selecionar Cidade:</label>
@@ -179,15 +195,20 @@
         </select>
         <label for="xml" class="block text-lg font-medium mb-2">Selecione um ou mais arquivos XML:</label>
         <input type="file" id="xml" name="xml" accept=".xml" multiple required class="mb-4 w-full p-2 border rounded">
-        <div class="flex gap-4 items-center">
-          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">Enviar</button>
-          <button type="button" id="btnBaixarTodos" onclick="baixarTodosPDFs()" class="hidden bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">
+        <div class="flex gap-4 items-center flex-wrap">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded min-w-[130px]">
+            Enviar
+          </button>
+          <button type="button" id="btnBaixarTodos" onclick="baixarTodosPDFs()" class="hidden bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded min-w-[130px]">
             📄 Baixar Todos
           </button>
-          <button type="button" id="btnImprimirTodos" onclick="imprimirTodosPDFs()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded">
+          <button type="button" id="btnImprimirTodos" onclick="imprimirTodosPDFs()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded min-w-[130px]">
             🖨️ Imprimir Todos
           </button>
-        </div>
+          <button type="button" id="btnBaixarCSV" onclick="baixarCSV()" class="hidden bg-blue-600 hover:bg-blue-900 text-white px-6 py-2 rounded min-w-[130px]">
+            📑 Baixar CSV
+          </button>
+        </div>        
       </form>
 
       <div id="resultado" class="mt-10"></div>
