@@ -1,8 +1,6 @@
 import os
 import base64
 import csv
-import qrcode
-import datetime
 from django.utils import timezone
 from io import BytesIO, StringIO
 from django.http import JsonResponse
