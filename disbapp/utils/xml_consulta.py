@@ -15,14 +15,9 @@ def ler_nfe_xml(path_arquivo):
     cnpj_cliente = get_text('.//ns:dest/ns:CNPJ')
     data_emissao = get_text('.//ns:ide/ns:dhEmi')
     valor_liquido = get_text('.//ns:fat/ns:vLiq')
-
-    # usa CPF ou CNPJ
-    ident_cliente = cpf_cliente if cpf_cliente else cnpj_cliente
-
-    # agora o TXID será o número da nota fiscal (nNF)
     txid = get_text('.//ns:ide/ns:nNF')
+    tpag = get_text('.//ns:detPag/ns:tPag')
 
-    # pega o conteúdo completo da tag <infCpl> para extrair código do cliente
     inf_cpl = get_text('.//ns:infAdic/ns:infCpl')
     cod_cliente = ""
 
@@ -34,8 +29,9 @@ def ler_nfe_xml(path_arquivo):
     return {
         'txid': txid,
         'cliente': cliente,
-        'ident_cliente': ident_cliente,
+        'ident_cliente': cpf_cliente if cpf_cliente else cnpj_cliente,
         'data_emissao': data_emissao,
         'valor_liquido': valor_liquido,
         'cod_cliente': cod_cliente,
+        'tpag': tpag  # adicionado
     }

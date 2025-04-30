@@ -39,6 +39,12 @@ def upload_xml_nfe_view(request):
             dados = ler_nfe_xml(caminho_temp)
             os.remove(caminho_temp)
 
+            # Filtra apenas pagamentos à vista
+            tpag = dados.get("tpag", "")
+            formas_aceitas = ["01", "02"]
+            if tpag not in formas_aceitas:
+                continue  # pula nota
+
             cod_cliente = dados.get("cod_cliente") or f"NF_{dados.get('txid')}"
             if cod_cliente not in agrupado_por_cliente:
                 agrupado_por_cliente[cod_cliente] = {
@@ -60,7 +66,7 @@ def upload_xml_nfe_view(request):
 
         csv_buffer = StringIO()
         csv_writer = csv.writer(csv_buffer)
-        csv_writer.writerow(["Codigo do Cliente", "Notas Fiscais", "Valor Total", "Cliente", "CPF/CNPJ", "Cidade"])
+        csv_writer.writerow(["TXID", "Notas Fiscais", "Valor Total", "Cliente", "CPF/CNPJ", "Cidade"])
 
         for cod_cliente, grupo in agrupado_por_cliente.items():
             nota_numeros = [n["txid"] for n in grupo["notas"]]
@@ -70,6 +76,11 @@ def upload_xml_nfe_view(request):
             notas_concatenadas = "/".join(nota_numeros)
             usar_cod_como_txid = len(nota_numeros) > 1 and not cod_cliente.startswith("NF_")
             txid = cod_cliente if usar_cod_como_txid else nota_numeros[0]
+
+            # Logo base64
+            caminho_logo = os.path.join(settings.BASE_DIR, 'disbapp', 'static', 'image.png')
+            with open(caminho_logo, 'rb') as logo_file:
+                logo_base64 = base64.b64encode(logo_file.read()).decode('utf-8')
 
             caminho_qr = os.path.join(base_dir, f"qrcode_pix_{txid}.png")
             caminho_qr, payload = gerar_qrcode_pix(
@@ -85,20 +96,14 @@ def upload_xml_nfe_view(request):
                 qrcode_base64 = base64.b64encode(qr_file.read()).decode("utf-8")
             os.remove(caminho_qr)
 
-            # Carrega logo e converte para base64
-            caminho_logo = os.path.join(settings.BASE_DIR, 'disbapp', 'static', 'image.png')
-            with open(caminho_logo, 'rb') as logo_file:
-                logo_base64 = base64.b64encode(logo_file.read()).decode('utf-8')
-
             html_string = render_to_string("pdf/nota_pdf.html", {
                 "valor": valor_formatado,
                 "cliente": grupo["cliente"],
-                "cod_cliente": cod_cliente,
                 "payload": payload,
                 "qrcode_base64": qrcode_base64,
                 "cidade": grupo["cidade"],
                 "notas_concatenadas": notas_concatenadas,
-                "logo": logo_base64
+                "logo_base64": logo_base64
             })
 
             pdf_buffer = BytesIO()
@@ -120,7 +125,7 @@ def upload_xml_nfe_view(request):
             })
 
             csv_writer.writerow([
-                cod_cliente,
+                txid,
                 notas_concatenadas,
                 valor_formatado,
                 grupo["cliente"],
