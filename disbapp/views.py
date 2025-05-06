@@ -99,6 +99,7 @@ def upload_xml_nfe_view(request):
             html_string = render_to_string("pdf/nota_pdf.html", {
                 "valor": valor_formatado,
                 "cliente": grupo["cliente"],
+                "cod_cliente": cod_cliente,
                 "payload": payload,
                 "qrcode_base64": qrcode_base64,
                 "cidade": grupo["cidade"],
