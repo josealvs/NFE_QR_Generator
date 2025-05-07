@@ -66,7 +66,7 @@ def upload_xml_nfe_view(request):
 
         csv_buffer = StringIO()
         csv_writer = csv.writer(csv_buffer)
-        csv_writer.writerow(["TXID", "Notas Fiscais", "Valor Total", "Cliente", "CPF/CNPJ", "Cidade"])
+        csv_writer.writerow(["Código", "Notas Fiscais", "Valor Total", "Cliente", "CPF/CNPJ", "Cidade"])
 
         for cod_cliente, grupo in agrupado_por_cliente.items():
             nota_numeros = [n["txid"] for n in grupo["notas"]]
@@ -126,7 +126,7 @@ def upload_xml_nfe_view(request):
             })
 
             csv_writer.writerow([
-                txid,
+                cod_cliente,
                 notas_concatenadas,
                 valor_formatado,
                 grupo["cliente"],

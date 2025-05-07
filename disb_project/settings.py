@@ -130,7 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configurações PIX por unidade
 PIX_CONFIGS = {
     "CAICO": {
-        "chave": "08562308000132",
+        "chave": "disbecol@disbecol.com.br",
         "nome": "DISBECOL DIST BEB LTDA",
         "cidade": "CAICO"
     },
